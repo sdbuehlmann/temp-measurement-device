@@ -10,13 +10,6 @@
 
 #define NEW_STATE 1
 
-
-// source: https://stackoverflow.com/a/2064593
-//#include <stdlib.h> // for malloc and free
-//void* operator new(size_t size) { return malloc(size); } 
-//void operator delete(void* ptr) { free(ptr); }
-
-
 class EdgeDetector {
   public:
       EdgeDetector();

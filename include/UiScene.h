@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <Adafruit_SSD1306.h>
 #include "CacheService.h"
+#include "utils/StringHandling.h"
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -37,6 +38,11 @@ class LineBasedUiScene : public IUiScene {
     void setLine3(char prefix[], char txt[]);
     void setLine4(char prefix[], char txt[]);
 
+    CharManager getLine1();
+    CharManager getLine2();
+    CharManager getLine3();
+    CharManager getLine4();
+
     virtual void display() override;
     char* getTitle() override;
     bool hasUndisplayedChanges() override;
@@ -49,14 +55,20 @@ class LineBasedUiScene : public IUiScene {
     
     char title[MAX_NR_CHARS];
 
+    
     char line1[MAX_NR_CHARS];
     char line2[MAX_NR_CHARS];
     char line3[MAX_NR_CHARS];
     char line4[MAX_NR_CHARS];
 
+    CharManager line1Manager = CharManager(line1, MAX_NR_CHARS);
+    CharManager line2Manager = CharManager(line2, MAX_NR_CHARS);
+    CharManager line3Manager = CharManager(line3, MAX_NR_CHARS);
+    CharManager line4Manager = CharManager(line4, MAX_NR_CHARS);
+
     // methods
     void setLine(char txt[], char buffer[]);
-    void setLine(char prefix[], char txt[], char buffer[]); // ToDo: Method with variable number of char arrays (merged together)
+    void setLine(char prefix[], char txt[], char buffer[]);
 };
 
 class GraphUiScene : public IUiScene {

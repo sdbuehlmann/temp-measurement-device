@@ -55,32 +55,30 @@ class MeasuringManager : public IVariablesReader<MeasuringVariables> {
     // actions
     static void measure_state_entry_action(MeasuringVariables* pVariables, StateInfo* pInfo) {
       logger.log("Entry measure state");
-      
+      Gui::instance().getMeasurementScene().setLine4("...", "");
 
-      unsigned long deltaT = millis();
       MeasurementValues measurementValues = Platform::instance().measure();
-      deltaT = millis() - deltaT;
+      CacheService::instance().getBuffer().in({measurementValues.temperature, measurementValues.humidity, pInfo->stateEnteredTime, false});
+      MinMaxValues minMax = CacheService::instance().getMinMax();
       
-      Gui::instance().getMeasurementScene().setLine1("Status: ", "Measure");
-
-      char result[8];
-      sprintf(result, "%-.1f", measurementValues.temperature);
-      Gui::instance().getMeasurementScene().setLine2("Temp: ", result);
+      // update measure gui
+      char result[30];
+      sprintf(result, "%-.1f (%-.1f/%-.1f)", measurementValues.temperature, minMax.minTemperature, minMax.maxTemperature);
+      Gui::instance().getMeasurementScene().getLine1().merge(2, "T: ", result);
       
-      sprintf(result, "%-.1f", measurementValues.humidity);
-      Gui::instance().getMeasurementScene().setLine3("Hum: ", result);
+      sprintf(result, "%-.1f (%-.1f/%-.1f)", measurementValues.humidity, minMax.minHumidity, minMax.maxHumidity);
+      Gui::instance().getMeasurementScene().getLine2().merge(2, "H: ", result);
 
-      sprintf(result,"%ld", deltaT);
-      Gui::instance().getMeasurementScene().setLine4("Delta t: ", result);
-
-      CacheValue temp = {measurementValues.temperature, measurementValues.humidity, millis(), false};
-      CacheService::instance().getBuffer().in(temp);
-
+      // update history gui (graph)
       Gui::instance().getHistoryScene().update();
     }
     static void wait_state_entry_action(MeasuringVariables* pVariables, StateInfo* pInfo) {
       logger.log("Entry wait state");
-      Gui::instance().getMeasurementScene().setLine1("Status: ", "Waiting");
+
+      char result[30];
+      unsigned int cachedTimeInSec = CacheService::instance().getCachedTimespan() / 1000;
+      sprintf(result, "(Min/Max last %ds)", cachedTimeInSec);
+      Gui::instance().getMeasurementScene().setLine4(result, "");
     }
 };
 

@@ -1,8 +1,26 @@
+
 #include "UiScene.h"
 
 LineBasedUiScene::LineBasedUiScene(Adafruit_SSD1306* pDisplay, char title[]) {
   this->pDisplay = pDisplay;
   setLine(title, this->title);
+}
+
+CharManager LineBasedUiScene::getLine1() {
+  return line1Manager;
+  changed = true;
+}
+CharManager LineBasedUiScene::getLine2() {
+  return line2Manager;
+  changed = true;
+}
+CharManager LineBasedUiScene::getLine3() {
+  return line3Manager;
+  changed = true;
+}
+CharManager LineBasedUiScene::getLine4() {
+  return line4Manager;
+  changed = true;
 }
 
 void LineBasedUiScene::setLine1(char prefix[], char txt[]) {

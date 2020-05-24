@@ -18,6 +18,7 @@ class Iterator {
     bool hasNext() {
       return idxNext < elementCount;
     }
+    
     T* getNext() {
       T* temp = pArray + idxNext;
       idxNext++;
@@ -114,6 +115,16 @@ class RingBuffer {
 
     int getCapacity() {
       return capacity;
+    }
+
+    T* getNewest() {
+      int indexNewest = (idxNextOut + elementCount - 1) % capacity;
+      return pArray + indexNewest;
+    }
+
+    T* getOldest() {
+      int indexOldest = idxNextOut;
+      return pArray + indexOldest;
     }
 
   private:
